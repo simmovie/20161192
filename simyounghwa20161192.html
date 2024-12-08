@@ -152,6 +152,21 @@
         <p>© 2024 디지털 타임캡슐</p>
     </footer>
     <script>
+        function chck(tim,ms){
+        const cur = new Date(); // 현재 시간을 함수 내부에서 생성
+        const hour1 = tim.getHours();
+        const min1 = tim.getMinutes();
+        const sec1 = tim.getSeconds();
+        const hour2 = cur.getHours();
+        const min2 = cur.getMinutes();
+        const sec2 = cur.getSeconds();
+
+        if (hour1 === hour2 && min1 === min2 && sec1 === sec2) {
+            alert(ms);
+        } else {
+            console.log("기다리는 중...");
+            }
+        }
         if (Notification.permission !== "granted") {
             Notification.requestPermission().then((permission) => {
                 if (permission === "granted") {
@@ -176,26 +191,18 @@
                 status.style.color = "red";
                 return;
             }
-
             const notifyTime = new Date(datetime).getTime();
             const currentTime = Date.now();
 
             if (notifyTime <= currentTime) {
                 status.textContent = "⚠️ 미래의 시간을 선택해주세요.";
                 status.style.color = "red";
-                return;
             }
 
             status.textContent = "✅ 알림이 설정되었습니다!";
             status.style.color = "green";
-
-            setTimeout(() => {
-                if (Notification.permission === "granted") {
-                    new Notification("📩 타임캡슐 메시지 도착", { body: message });
-                } else {
-                    console.error("Notification permission was not granted.");
-                }
-            }, notifyTime - currentTime);
+            const targetTime = new Date(datetime);
+            setInterval(chck,1000,targetTime,message);
         });
     </script>
 </body>
